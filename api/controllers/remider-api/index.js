@@ -4,11 +4,11 @@ const HELPER_BASE = process.env.HELPER_BASE || "/opt/";
 const Response = require(HELPER_BASE + 'response');
 
 const API_KEY = "12345678";
+const NOTIFICATION_API_KEY = "12345678";
 const NOTIFICATION_BASE_URL = "https://【通知用サーバのURL】";
 
 const REMINDER_TABLE_NAME = "reminder";
 const REMINDER_FILE_PATH = process.env.THIS_BASE_PATH + '/data/reminder/reminder.db';
-const NOTIFICATION_API_KEY = "12345678";
 const ABSENT_INTERVAL = 1000 * 60 * 60;
 const DEFAULT_CLIENT_ID = "②";
 const LIST_PAST_DURATION = 1000 * 60 * 60 * 24 * 30;
