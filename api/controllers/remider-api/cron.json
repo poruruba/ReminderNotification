@@ -1,0 +1,7 @@
+[
+  {
+    "handler": "cron_handler",
+    "enable": true,
+    "schedule": "0 * * * * *"
+  }
+]
