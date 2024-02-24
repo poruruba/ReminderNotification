@@ -4,8 +4,11 @@ const HELPER_BASE = process.env.HELPER_BASE || "/opt/";
 const Response = require(HELPER_BASE + 'response');
 
 const API_KEY = "12345678";
-const NOTIFICATION_API_KEY = "12345678";
+// 独自アプリで通知する場合
 const NOTIFICATION_BASE_URL = "https://【通知用サーバのURL】";
+const NOTIFICATION_API_KEY = "12345678";
+// LINE Notifyで通知する場合
+const LINE_NOTIFY_ACCESS_TOKEN = "【LINE Notifyアクセストークン】";
 
 const REMINDER_TABLE_NAME = "reminder";
 const REMINDER_FILE_PATH = process.env.THIS_BASE_PATH + '/data/reminder/reminder.db';
@@ -251,6 +254,11 @@ function do_post_with_apikey(url, body, apikey) {
 }
 
 async function send_message(client_id, title, body, datetime){
+// 独自アプリで通知する場合
+    return line_notify(title + ":" + body, LINE_NOTIFY_ACCESS_TOKEN);
+
+// LINE Notifyで通知する場合
+/*
     var params = {
         topic: "fcm_notification",
         client_id: client_id,
@@ -260,4 +268,28 @@ async function send_message(client_id, title, body, datetime){
     };
     var result = await do_post_with_apikey(NOTIFICATION_BASE_URL + "/notification-push-message", params, NOTIFICATION_API_KEY);
     return result;
+*/
+}
+
+function line_notify(message, token){
+  var params = {
+      message: message
+  };
+  return do_post_urlencoded_token('https://notify-api.line.me/api/notify', params, token);
+}
+
+function do_post_urlencoded_token(url, params, token) {
+  const headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', 'Authorization' : 'Bearer ' + token });
+  var body = new URLSearchParams(params);
+
+  return fetch(url, {
+      method: 'POST',
+      body: body,
+      headers: headers
+    })
+    .then((response) => {
+      if (!response.ok)
+        throw 'status is not 200';
+      return response.json();
+    })
 }
